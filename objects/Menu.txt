@@ -1,0 +1,75 @@
+package objects;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+
+import utility.Method;
+
+public class Menu {
+
+	public static final String WOMAN_button = "//a[@class='sf-with-ul'][contains(text(),'Women')]";
+	public static final String DRESSES_button = "/html[1]/body[1]/div[1]/div[1]/header[1]/div[3]/div[1]/div[1]/div[6]/ul[1]/li[2]/a[1]";
+	public static final String Summer_dresses = "//ul[@class='submenu-container clearfix first-in-line-xs']//ul//li//a[contains(text(),'Summer Dresses')]";
+	public static final String Sum_dres = "/html[1]/body[1]/div[1]/div[1]/header[1]/div[3]/div[1]/div[1]/div[6]/ul[1]/li[2]/ul[1]/li[3]/a[1]";
+
+	public static void WomanMethod(WebDriver driver) {
+
+		WebElement elem = driver.findElement(By.xpath(WOMAN_button));
+		WebElement sumdres = driver.findElement(By.xpath(Summer_dresses));
+
+		Actions builder = new Actions(driver);
+		builder.moveToElement(elem).build().perform();
+		builder.moveToElement(sumdres).build().perform();
+		sumdres.click();
+	}
+
+	public static void DressesMethod(WebDriver driver) {
+
+		WebElement elem = driver.findElement(By.xpath(DRESSES_button));
+		WebElement sumdres = driver.findElement(By.xpath(Sum_dres));
+
+		Actions builder = new Actions(driver);
+		builder.moveToElement(elem).build().perform();
+		builder.moveToElement(sumdres).build().perform();
+		sumdres.click();
+	}
+	
+	public static void chooseDress(WebDriver driver) { 
+		
+
+		HomePage.navigateToHomePage(driver);
+		driver.manage().window().maximize();
+		Method.Wait();
+
+		WomanMethod(driver);
+		driver.findElement(By.xpath(
+				"//li[@class='ajax_block_product col-xs-12 col-sm-6 col-md-4 first-in-line last-line first-item-of-tablet-line first-item-of-mobile-line last-mobile-line']//a[@class='product-name'][contains(text(),'Printed Summer Dress')]"))
+				.click();
+		Method.Wait();
+
+		for (int i = 0; i < 1; i++) {
+			driver.findElement(By.xpath("//a[@class='btn btn-default button-plus product_quantity_up']")).click();
+
+		}
+		driver.findElement(By.xpath("//select[@id='group_1']")).click();
+		driver.findElement(By.xpath("//option[contains(text(),'M')]")).click();
+		driver.findElement(By.xpath("//a[@id='color_14']")).click();
+		driver.findElement(By.xpath("//button[@name='Submit']")).click();
+		
+		
+		
+	}
+	
+	
+	public static String dressDetails (WebDriver driver) {
+		return	driver.findElement(By.xpath("//td[@class='cart_description']//a[contains(text(),'Color : Blue, Size : M')]")).getText();
+		}
+	
+	public static String dressQuantity( WebDriver driver) { 
+		
+		return driver.findElement(By.xpath("//input[@name='quantity_5_24_0_0']")).getAttribute("value");
+	}
+	
+}

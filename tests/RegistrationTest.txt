@@ -1,0 +1,154 @@
+package tests;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+import objects.HomePage;
+import objects.SignIn;
+import objects.Menu;
+import objects.Registration;
+import utility.ExcelUtils;
+import utility.Method;
+
+public class RegistrationTest {
+
+	WebDriver driver = new ChromeDriver();
+
+	
+
+	// opening registration form direct from cart
+	@Test
+	public void testRegisterFromCart() {
+
+		HomePage.navigateToHomePage(driver);
+		driver.manage().window().maximize();
+
+		Method.Wait();
+		Menu.chooseDress(driver);
+		Method.Wait();
+		driver.findElement(By.xpath("//a[@class='btn btn-default button button-medium']")).click();
+		Method.Wait();
+		driver.findElement(By.xpath("//a[@class='button btn btn-default standard-checkout button-medium']")).click();
+		Method.Wait();
+
+		String email = "ana.djokic@gmail.com";
+		Registration.RegisterUser(driver, email);
+
+		Method.Wait();
+
+		Registration.inputFirstName(driver, "Ana");
+		Registration.inputLastName(driver, "Djokic");
+		Registration.inputPassword(driver, "sifra123");
+
+		Registration.inputAddress(driver, "Yellow Street 17");
+		Registration.inputCity(driver, "Phoenix");
+		Registration.inputState(driver, "Arizona");
+		Registration.inputPostalCode(driver, "85001");
+		
+		
+		Registration.inputMobilePhone(driver, "03357893393");
+		Registration.inputAliasAddress(driver, "Palm Street 177");
+
+		Registration.clickRegButton(driver);
+
+		Method.Wait();
+		
+		
+		String account = SignIn.getMyAccount(driver);
+		String sobutton = SignIn.getSignOutField(driver);
+
+		String myaccount = "Ana Djokic";
+		String button = "Sign out";
+
+		SoftAssert sa = new SoftAssert();
+
+		sa.assertEquals(account, myaccount);
+		sa.assertEquals(sobutton, button);
+
+		sa.assertAll();
+		
+		
+
+	
+
+	}
+	
+	
+	//registration of thirty new users
+	
+	@Test 
+	public void testRegisterThirtyUsers () { 
+		
+		Registration.openRegistration(driver);
+		driver.manage().window().maximize();
+		
+		ExcelUtils.setExcell("UsersData.xls");
+		ExcelUtils.setWorkSheet(0);
+		
+		for (int i = 1; i <ExcelUtils.getRowNumber() ; i++) {
+			
+			Registration.openRegistration(driver);
+			Method.Wait();
+			
+			
+			Registration.RegisterUser(driver, ExcelUtils.getDataAt(i, 2 ) );
+			
+
+			Method.Wait();
+			Method.Wait();
+
+			Registration.inputFirstName(driver, ExcelUtils.getDataAt(i, 0));
+			Method.Wait();
+			Registration.inputLastName(driver, ExcelUtils.getDataAt(i, 1));
+			Method.Wait();
+			Registration.inputPassword(driver, ExcelUtils.getDataAt(i, 3));
+			Method.Wait();
+			Registration.inputAddress(driver, ExcelUtils.getDataAt(i, 4));
+			Method.Wait();
+			Registration.inputCity(driver, ExcelUtils.getDataAt(i, 5));
+			Method.Wait();
+			Registration.inputState(driver, ExcelUtils.getDataAt(i, 6));
+			Method.Wait();
+			Registration.inputPostalCode(driver, ExcelUtils.getDataAt(i, 7));
+			Method.Wait();
+			
+			Registration.inputMobilePhone(driver, ExcelUtils.getDataAt(i, 9));
+			Method.Wait();
+			Registration.inputAliasAddress(driver, ExcelUtils.getDataAt(i, 10));
+			Method.Wait();
+			
+			Registration.clickRegButton(driver);
+
+			Method.Wait();
+			SignIn.clickSignOut(driver);
+			Method.Wait();
+
+			
+			
+			
+		}
+	
+		
+	
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

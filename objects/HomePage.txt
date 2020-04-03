@@ -1,0 +1,21 @@
+package objects;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+
+public class HomePage {
+
+	public static final String HOMEPAGE_URL = "http://automationpractice.com/index.php";
+
+	public static void navigateToHomePage(WebDriver driver) {
+		driver.navigate().to(HOMEPAGE_URL);
+	}
+
+	public static void openHomePage(WebDriver driver) {
+		driver.get(HOMEPAGE_URL);
+	}
+	
+
+}

@@ -1,0 +1,119 @@
+package tests;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+import objects.HomePage;
+import objects.Menu;
+import utility.Method;
+
+public class TestDresses {
+
+	WebDriver driver = new ChromeDriver();
+
+	// go to summer dresses using Woman button
+	  @Test public void testWoman() {
+	  
+	  HomePage.navigateToHomePage(driver); driver.manage().window().maximize();
+	  Method.Wait();
+	  
+	  Menu.WomanMethod(driver);
+	  
+	  String current = driver.getCurrentUrl(); String url =
+	  "http://automationpractice.com/index.php?id_category=11&controller=category";
+	  
+	  Assert.assertEquals(url, current);
+	  
+	  }
+	  
+	  //go to summer dresses using Dresses button
+	  
+	  @Test public void testDresses() {
+	  
+	  HomePage.navigateToHomePage(driver); driver.manage().window().maximize();
+	  Method.Wait();
+	  
+	  Menu.DressesMethod(driver);
+	  
+	  String current = driver.getCurrentUrl(); String url =
+	  "http://automationpractice.com/index.php?id_category=11&controller=category";
+	  
+	  Assert.assertEquals(url, current);
+	  
+	  }
+	  
+	  //checking if Dress method and Woman method are going on the same page
+	  
+	  @Test public void matchingUrl() {
+	  
+	  HomePage.navigateToHomePage(driver); driver.manage().window().maximize();
+	  Method.Wait();
+	  
+	  Menu.WomanMethod(driver);
+	  
+	  String woman = driver.getCurrentUrl(); driver.navigate().back();
+	  
+	  Method.Wait();
+	  
+	  Menu.DressesMethod(driver);
+	  
+	  String dresses = driver.getCurrentUrl();
+	  
+	  Assert.assertEquals(woman, dresses);
+	 
+	  }
+	  // testing if the right dress has been chosen
+	  @Test public void testchooseDress() {
+	  
+	  HomePage.navigateToHomePage(driver); driver.manage().window().maximize();
+	  Method.Wait();
+	  
+	  Menu.chooseDress(driver);
+	 
+	  String current = driver.getCurrentUrl(); 
+	  String add = "http://automationpractice.com/index.php?id_product=5&controller=product#/color-blue/size-m";
+	  
+	  Assert.assertEquals(current, add);
+	  
+	  }
+	 
+    // testing if the right dress in the right color and right quantity is selected
+	@Test
+	public void testCart() {
+
+		HomePage.navigateToHomePage(driver);
+		driver.manage().window().maximize();
+
+		Method.Wait();
+		Menu.chooseDress(driver);
+		Method.Wait();
+		driver.findElement(By.xpath("//a[@class='btn btn-default button button-medium']")).click();
+
+	
+
+		String detalji = Menu.dressDetails(driver);
+		String kolicina1 = Menu.dressQuantity(driver);
+		
+		String karakteristike = "Color : Blue, Size : M" ;
+		String kolicina = "2";
+
+	
+
+		SoftAssert sa = new SoftAssert();
+		
+		sa.assertEquals(detalji, karakteristike);
+        sa.assertEquals(kolicina1, kolicina);
+		
+
+		sa.assertAll();
+
+	}
+
+}

@@ -1,0 +1,132 @@
+package tests;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+import objects.HomePage;
+import objects.Registration;
+import objects.SignIn;
+import utility.ExcelUtils;
+import utility.Method;
+
+public class SignInTest {
+
+	WebDriver driver = new ChromeDriver();
+
+	// Log in (one user)
+	@Test
+	public void testUserLogIn() {
+
+		HomePage.navigateToHomePage(driver);
+		driver.manage().window().maximize();
+		Method.Wait();
+
+		SignIn.clickSignin(driver);
+		Method.Wait();
+		SignIn.enterEmail(driver, "katarina@gmail.com");
+		Method.Wait();
+		SignIn.enterPassword(driver, "sifra123");
+		Method.Wait();
+
+		SignIn.clickSignInButton(driver);
+
+		Method.Wait();
+
+		String account = SignIn.getMyAccount(driver);
+		String sobutton = SignIn.getSignOutField(driver);
+
+		String myaccount = "Katarina Uksanovic";
+		String button = "Sign out";
+
+		SoftAssert sa = new SoftAssert();
+
+		sa.assertEquals(account, myaccount);
+		sa.assertEquals(sobutton, button);
+
+		sa.assertAll();
+
+		SignIn.clickSignOut(driver);
+
+	}
+
+	
+	// Log out (one user)
+	@Test
+
+	public void testUserLogOut() {
+
+		HomePage.navigateToHomePage(driver);
+		driver.manage().window().maximize();
+
+		SignIn.clickSignin(driver);
+		SignIn.enterEmail(driver, "katarina@gmail.com");
+		Method.Wait();
+		SignIn.enterPassword(driver, "sifra123");
+		Method.Wait();
+
+		SignIn.clickSignInButton(driver);
+		Method.Wait();
+		SignIn.clickSignOut(driver);
+
+		Method.Wait();
+
+		String button = SignIn.getSignin(driver);
+		String snbutton = "Sign in";
+
+		Assert.assertEquals(button, snbutton);
+
+	}
+
+	// Log in ( thirty  users)
+	@Test
+
+	public void testUsersListLogIn() {
+
+		ExcelUtils.setExcell("UsersData.xls");
+		ExcelUtils.setWorkSheet(0);
+        SoftAssert sa = new SoftAssert();
+		
+		Registration.openRegistration(driver);
+		driver.manage().window().maximize();
+		
+			Method.Wait();
+			
+			
+		for (int i = 1; i < ExcelUtils.getRowNumber(); i++) {
+
+			
+
+			SignIn.clickSignin(driver);
+			SignIn.enterEmail(driver, ExcelUtils.getDataAt(i, 2));
+			Method.Wait();
+			SignIn.enterPassword(driver, ExcelUtils.getDataAt(i, 3));
+			Method.Wait();
+
+			SignIn.clickSignInButton(driver);
+			Method.Wait();
+
+			String button = SignIn.getSignOutField(driver);
+			String sobutton = "Sign out";
+			
+			
+			
+			sa.assertEquals(button, sobutton);
+
+			Method.Wait();
+
+			SignIn.clickSignOut(driver);
+			
+			Method.Wait();
+
+		}
+		
+		sa.assertAll();
+
+	}
+
+}
